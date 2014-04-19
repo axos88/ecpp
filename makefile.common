@@ -29,7 +29,7 @@ LIB_DIR       = $(foreach var,$(LIB_DIRS),-L"$(var)")
 OBJ_DIRS      = $(foreach var,$(OBJ),$(dir $(var)))
 OBJ_TEST_DIRS = $(foreach var,$(OBJ_TEST),$(dir $(var)))
 
-OBJ_MAIN      = $(SRC_DIR)/main.o
+OBJ_MAIN      = $(OBJ_DIR)/main.o
 
 LDFLAGS       = $(LIB_DIR) $(LIB)
 
