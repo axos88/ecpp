@@ -1,0 +1,130 @@
+CC=gcc
+CXX=g++
+OBJDUMP=dump
+
+MKDIR=mkdir
+CP=cp
+
+CXXFLAGS  += -c -O$(OPTIMIZATION)
+CXXFLAGS += -Wall  -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)"
+
+OBJ_C   = $(patsubst %.c,%.o,$(SOURCES))
+OBJ_CXX = $(patsubst %.cpp,%.o,$(OBJ_C))
+OBJ_A   = $(patsubst %.S,%.o,$(OBJ_CXX))
+OBJ_ALL = $(OBJ_A)
+
+OBJ_TST = $(patsubst %.cpp,%.o,$(TESTS))
+
+SRC           = $(foreach var,$(SOURCES),$(SRC_DIR)/$(var))
+TST           = $(foreach var,$(TESTS),$(TEST_DIR)/$(var))
+OBJ           = $(foreach var,$(OBJ_ALL),$(OBJ_DIR)/$(var))
+OBJ_TEST      = $(foreach var,$(OBJ_TST),$(OBJ_DIR)/$(TEST_DIR)/$(var))
+LIB           = $(foreach var,$(LIBS),"-l$(var)")
+LIB_TEST      = $(foreach var,$(LIBS),"-l$(var)") -lgtest -lgtest_main
+DEP           = $(foreach var,$(OBJ),$(var:%.o=%.d))
+DEP_TEST      = $(foreach var,$(OBJ_TEST),$(var:%.o=%.d))
+
+INC           = $(foreach var,$(INCLUDE_DIRS),-I"$(var)") -I$(INC_DIR)
+LIB_DIR       = $(foreach var,$(LIB_DIRS),-L"$(var)")
+OBJ_DIRS      = $(foreach var,$(OBJ),$(dir $(var)))
+OBJ_TEST_DIRS = $(foreach var,$(OBJ_TEST),$(dir $(var)))
+
+OBJ_MAIN      = $(SRC_DIR)/main.o
+
+LDFLAGS       = $(LIB_DIR) $(LIB)
+
+
+ifeq ($(TYPE),app)
+
+TARGET=$(BIN_DIR)/$(PROJECT)
+TEST_TARGET=$(BIN_DIR)/$(PROJECT)_tests
+LISTING=$(BIN_DIR)/$(PROJECT).lst
+MAP=$(BIN_DIR)/$(PROJECT).map
+
+endif
+
+ifeq ($(TYPE),lib)
+
+TARGETS=$(LIB_DIR)/lib$(PROJECT).a
+INSTALL_DIR=$(INSTALL_PREFIX)/lib
+INSTALL_INCLUDE=$(INSTALL_PREFIX)/include
+
+INSTALL_INCLUDES=$(foreach var,$(INCLUDE),$(INSTALL_INCLUDE)/$(var))
+INSTALL_TARGETS= $(INSTALL_DIR)/lib$(PROJECT).a
+
+endif
+
+
+.PHONY: all test clean install
+
+all: test $(TARGET)
+
+test: $(TEST_TARGET)
+	$(TEST_TARGET)
+
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	@echo "CC $<"
+	@$(MKDIR) -p $(dir $@)
+	$(CC) $(INC) $(CFLAGS) -o"$@" "$<"
+
+$(OBJ_DIR)/$(TEST_DIR)/%.o: $(TEST_DIR)/%.c
+	@echo "CC $<"
+	@$(MKDIR) -p $(dir $@)
+	$(CC) $(INC) $(CFLAGS) -o"$@" "$<"
+
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
+	@echo "CXX $<"
+	@$(MKDIR) -p $(dir $@)
+	$(CXX) $(INC) $(CXXFLAGS) -o"$@" "$<"
+
+$(OBJ_DIR)/$(TEST_DIR)/%.o: $(TEST_DIR)/%.cpp
+	@echo "CXX $<"
+	@$(MKDIR) -p $(dir $@)
+	$(CXX) $(INC) $(CXXFLAGS) -o"$@" "$<"
+
+
+$(BIN_DIR)/%.a: $(OBJ)
+	$(MKDIR) -p $(BIN_DIR)
+	@echo "Link to library $@"
+	@$(AR) -r  $@ $(OBJ)
+
+
+$(TARGET): $(OBJ) $(OBJ_MAIN)
+	@echo "LD $(TARGET)"
+	@$(MKDIR) -p $(BIN_DIR)
+	$(CC) $(LDFLAGS) -o"$@" $(OBJ) $(OBJ_MAIN)
+
+$(TEST_TARGET): $(OBJ) $(OBJ_TEST)
+	@echo "LD $(TEST_TARGET)"
+	@$(MKDIR) -p $(BIN_DIR)
+	$(CC) $(LDFLAGS) -o"$@" $(OBJ) $(OBJ_TEST) $(LIB_TEST)
+
+
+
+$(BIN_DIR)/%.lst: $(TARGET)
+	@$(OBJDUMP) -h -S "$<" > "$@"
+
+clean:
+	$(RM) $(OBJ) $(DEP) $(TARGETS) $(LISTINGS) $(MAPS) $(DEP) $(OBJ_TEST) $(DEP_TEST)
+	find $(OBJ_DIR) -type d -empty -delete
+	find $(BIN_DIR) -type d -empty -delete
+
+install: $(INSTALL_TARGETS) $(INSTALL_INCLUDES)
+
+$(INSTALL_INCLUDE)/%.h: $(INC_DIR)/%.h
+	@echo "Install include file $<"
+	@$(MKDIR) -p $(dir $@)
+	@$(CP) $< $@
+
+$(INSTALL_INCLUDE)/%.inc: $(INC_DIR)/%.inc
+	@echo "Install inc file $<"
+	@$(MKDIR) -p $(dir $@)
+	@$(CP) $< $@
+
+
+$(INSTALL_DIR)/%.a: $(BIN_DIR)/%.a | $(INSTALL_DIR)
+	@echo "Installing library from $<"
+	@$(CP) $< $@
+
+-include $(DEP)
+-include $(DEP_TEST)
