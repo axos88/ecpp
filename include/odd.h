@@ -1,1 +1,0 @@
-bool odd(int x);

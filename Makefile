@@ -3,14 +3,15 @@
 PROJECT=ecppc
 TYPE=app
 
-SOURCES+= odd.cpp
+SOURCES+= ecpp.cpp
 INCLUDES+=
 INCLUDE_DIRS+= /Users/avandra/projects/c++/gtest-1.7.0/include
+
 
 LIBS+= stdc++
 LIB_DIRS+= /Users/avandra/projects/c++/gtest-1.7.0/lib
 
-TESTS+= a.cpp b.cpp
+TESTS+= eccpc_test.cpp
 
 SRC_DIR=src
 TEST_DIR=test
