@@ -105,7 +105,7 @@ $(BIN_DIR)/%.lst: $(TARGET)
 	@$(OBJDUMP) -h -S "$<" > "$@"
 
 clean:
-	$(RM) $(OBJ) $(DEP) $(TARGETS) $(LISTINGS) $(MAPS) $(DEP) $(OBJ_TEST) $(DEP_TEST)
+	$(RM) $(OBJ) $(DEP) $(TARGET) $(LISTING) $(MAP) $(DEP) $(OBJ_TEST) $(DEP_TEST) $(TEST_TARGET)
 	find $(OBJ_DIR) -type d -empty -delete
 	find $(BIN_DIR) -type d -empty -delete
 
