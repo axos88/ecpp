@@ -4,5 +4,5 @@
 using namespace std;
 
 namespace ECPP {
-    vector<string> parse(string& eccp);
+    vector<string> tokenize(string& eccp);
 }

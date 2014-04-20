@@ -2,7 +2,7 @@
 
 using namespace std;
 
-vector<string> ECPP::parse(string &s)
+vector<string> ECPP::tokenize(string &s)
 {
     vector<string> ret;
 
