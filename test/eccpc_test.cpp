@@ -40,7 +40,7 @@ TEST(Tokenizer, SimpleString) {
   v.push_back(s);
 
 
-  EXPECT_EQ(v, ECPP::tokenize(s));
+  EXPECT_EQ(v, ECPP::Tokenizer::tokenize(s));
 }
 
 TEST(Tokenizer, SingleCodeBlock) {
@@ -52,7 +52,7 @@ TEST(Tokenizer, SingleCodeBlock) {
   v.push_back(s);
 
 
-  EXPECT_EQ(v, ECPP::tokenize(s));
+  EXPECT_EQ(v, ECPP::Tokenizer::tokenize(s));
 }
 
 TEST(Tokenizer, CodeBlockInTheMiddle) {
@@ -65,7 +65,7 @@ TEST(Tokenizer, CodeBlockInTheMiddle) {
   v.push_back("<%= bar() %>");
   v.push_back("baz");
 
-  EXPECT_EQ(v, ECPP::tokenize(s));
+  EXPECT_EQ(v, ECPP::Tokenizer::tokenize(s));
 }
 
 TEST(Tokenizer, CodeBlockSurroundedByWhitespace) {
@@ -78,41 +78,55 @@ TEST(Tokenizer, CodeBlockSurroundedByWhitespace) {
   v.push_back("<%= bar() %>");
   v.push_back("  ");
 
-  EXPECT_EQ(v, ECPP::tokenize(s));
+  EXPECT_EQ(v, ECPP::Tokenizer::tokenize(s));
 }
 
 TEST(Tokenizer, QuotedEnclosingCodeBlock) {
 
-  string s = "\n\t <%= bar(\"%>\") %>  ";
+  string s = "foo<%= bar(\"%>\") %>  ";
 
   vector<string> v;
 
-  v.push_back("\n\t ");
+  v.push_back("foo");
   v.push_back("<%= bar(\"%>\") %>");
   v.push_back("  ");
 
-  EXPECT_EQ(v, ECPP::tokenize(s));
+  EXPECT_EQ(v, ECPP::Tokenizer::tokenize(s));
 }
 
 TEST(Tokenizer, EscapedOpenBlock) {
-  string s = "foo <\\% bar() %>";
+  string s = "foo <%% bar() <% blah() %>";
 
   vector<string> v;
 
-  v.push_back("foo <\% bar() %>");
+  v.push_back("foo <% bar() ");
+  v.push_back("<% blah() %>");
 
-  EXPECT_EQ(v, ECPP::tokenize(s));
+  EXPECT_EQ(v, ECPP::Tokenizer::tokenize(s));
 }
+
+TEST(Tokenizer, EscapedCloseBlock) {
+  string s = "foo <% bar() %%> blah(); %>";
+
+  vector<string> v;
+
+  v.push_back("foo ");
+  v.push_back("<% bar() %> blah(); %>");
+
+  EXPECT_EQ(v, ECPP::Tokenizer::tokenize(s));
+}
+
+
 
 TEST(Tokenizer, WhenStartingWithCodeBlock) {
   string s = "<% foo() %> bar";
 
   vector<string> v;
 
-  v.push_back("<% foo %>");
+  v.push_back("<% foo() %>");
   v.push_back(" bar");
 
-  EXPECT_EQ(v, ECPP::tokenize(s));
+  EXPECT_EQ(v, ECPP::Tokenizer::tokenize(s));
 }
 
 TEST(Tokenizer, WhenEndingWithCodeBlock) {
@@ -120,11 +134,11 @@ TEST(Tokenizer, WhenEndingWithCodeBlock) {
 
   vector<string> v;
 
-  v.push_back("<% foo %>");
+  v.push_back("<% foo() %>");
   v.push_back(" bar ");
   v.push_back("<% baz   %>");
 
-  EXPECT_EQ(v, ECPP::tokenize(s));
+  EXPECT_EQ(v, ECPP::Tokenizer::tokenize(s));
 }
 
 TEST(Tokenizer, DISABLE_ShouldIssueWarningWhenStartingWithWhiteSpace) {

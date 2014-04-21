@@ -3,7 +3,7 @@
 PROJECT=ecppc
 TYPE=app
 
-SOURCES+= ecpp.cpp
+SOURCES+= tokenizer.cpp
 INCLUDES+=
 INCLUDE_DIRS+= /Users/avandra/projects/c++/gtest-1.7.0/include
 

@@ -5,7 +5,7 @@ OBJDUMP=dump
 MKDIR=mkdir
 CP=cp
 
-CXXFLAGS  += -c -O$(OPTIMIZATION)
+CXXFLAGS  += -c -O$(OPTIMIZATION) --std=c++11
 CXXFLAGS += -Wall  -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)"
 
 OBJ_C   = $(patsubst %.c,%.o,$(SOURCES))
@@ -30,6 +30,7 @@ OBJ_DIRS      = $(foreach var,$(OBJ),$(dir $(var)))
 OBJ_TEST_DIRS = $(foreach var,$(OBJ_TEST),$(dir $(var)))
 
 OBJ_MAIN      = $(OBJ_DIR)/main.o
+DEP_MAIN	  = $(OBJ_DIR)/main.d
 
 LDFLAGS       = $(LIB_DIR) $(LIB)
 
@@ -105,7 +106,7 @@ $(BIN_DIR)/%.lst: $(TARGET)
 	@$(OBJDUMP) -h -S "$<" > "$@"
 
 clean:
-	$(RM) $(OBJ) $(DEP) $(TARGET) $(LISTING) $(MAP) $(DEP) $(OBJ_TEST) $(DEP_TEST) $(TEST_TARGET)
+	$(RM) $(OBJ) $(DEP) $(TARGET) $(LISTING) $(MAP) $(DEP) $(OBJ_TEST) $(DEP_TEST) $(TEST_TARGET) $(OBJ_MAIN) $(DEP_MAIN)
 	find $(OBJ_DIR) -type d -empty -delete
 	find $(BIN_DIR) -type d -empty -delete
 
@@ -128,3 +129,4 @@ $(INSTALL_DIR)/%.a: $(BIN_DIR)/%.a | $(INSTALL_DIR)
 
 -include $(DEP)
 -include $(DEP_TEST)
+-include $(DEP_MAIN)
