@@ -61,30 +61,13 @@ namespace ECPP {
 
                     string Contents() { return contents; }
                     InstructionType Type() { return type; }
+
+                    static Instruction createStringInstruction(string contents) { return Instruction(Instruction::STRING_INSTRUCTION, contents, "", ""); }
+                    static Instruction createCodeInstruction(string contents) { return Instruction(Instruction::CODE_INSTRUCTION, contents, "<% ", "%>"); }
+                    static Instruction createPrintInstruction(string contents) { return Instruction(Instruction::PRINT_INSTRUCTION, contents, "<%=", "%>"); }
+                    static Instruction createIncludeInstruction(string contents) { return Instruction(Instruction::INCLUDE_INSTRUCTION, contents, "<%i", "%>"); }
             };
 
-            class StringInstruction : public Instruction {
-                public:
-                    StringInstruction(string contents) : Instruction(Instruction::STRING_INSTRUCTION, contents, "", "") { }
-            };
-
-            class CodeInstruction : public Instruction {
-                public:
-                    CodeInstruction(string contents) : Instruction(Instruction::CODE_INSTRUCTION, contents, "<% ", "%>") { }
-            };
-
-            class PrintInstruction : public Instruction {
-                public:
-                    PrintInstruction(string contents) : Instruction(Instruction::PRINT_INSTRUCTION, contents, "<%=", "%>") { }
-
-            };
-
-            class IncludeInstruction : public Instruction {
-                public:
-                    IncludeInstruction(string contents) : Instruction(Instruction::INCLUDE_INSTRUCTION, contents, "<%i", "%>") { }
-            };
-
-
-            vector<Instruction*> analyze(vector<string> tokens);
+            vector<Instruction> analyze(vector<string> tokens);
     };
 }
