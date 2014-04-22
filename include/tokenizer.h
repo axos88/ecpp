@@ -1,3 +1,6 @@
+#ifndef __TOKENIZER_H__
+#define __TOKENIZER_H__
+
 #include <string>
 #include <vector>
 #include <iostream>
@@ -31,3 +34,5 @@ namespace ECPP {
 
     };
 }
+
+#endif

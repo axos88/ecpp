@@ -1,3 +1,6 @@
+#ifndef __CONTEXT_H__
+#define __CONTEXT_H__
+
 #include <string>
 #include <map>
 #include <iostream>
@@ -57,3 +60,5 @@ namespace ECPP {
     };
 
 };
+
+#endif

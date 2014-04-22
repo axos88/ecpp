@@ -1,3 +1,6 @@
+#ifndef __LEXER_H__
+#define __LEXER_H__
+
 #include <string>
 #include <vector>
 #include <iostream>
@@ -42,3 +45,5 @@ namespace ECPP {
     };
 
 };
+
+#endif
