@@ -115,12 +115,30 @@ TEST(IncludeInstruction, ShouldThrowIfEndTagIsMissing) {
   ASSERT_THROW(Lexer::Instruction::createIncludeInstruction(s), Lexer::InvalidTokenError);
 }
 
-TEST(Analyzer, ShouldReturnAnEmptyVectorOnAnEmptyInput)
+TEST(LexerCreate, WithAStringToken)
 {
-  Lexer l;
-  vector<string> input;
+  string s = "foo";
 
-  auto result = l.analyze(input);
+  ASSERT_EQ(Lexer::Instruction::Type::STRING, Lexer::Instruction::create(s).Type());
+}
 
-  ASSERT_TRUE(result.empty());
+TEST(LexerCreate, WithACodeToken)
+{
+  string s = "<% foo %>";
+
+  ASSERT_EQ(Lexer::Instruction::Type::CODE, Lexer::Instruction::create(s).Type());
+}
+
+TEST(LexerCreate, WithAPrintToken)
+{
+  string s = "<%= foo %>";
+
+  ASSERT_EQ(Lexer::Instruction::Type::PRINT, Lexer::Instruction::create(s).Type());
+}
+
+TEST(LexerCreate, WithAnIncludeToken)
+{
+  string s = "<%i foo %>";
+
+  ASSERT_EQ(Lexer::Instruction::Type::INCLUDE, Lexer::Instruction::create(s).Type());
 }

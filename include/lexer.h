@@ -30,10 +30,12 @@ namespace ECPP {
                     string Contents() { return contents; }
                     Type Type() { return type; }
 
-                    static Instruction createStringInstruction(string contents) { return Instruction(Type::STRING, contents, "", ""); }
-                    static Instruction createCodeInstruction(string contents) { return Instruction(Type::CODE, contents, "<% ", "%>"); }
-                    static Instruction createPrintInstruction(string contents) { return Instruction(Type::PRINT, contents, "<%=", "%>"); }
-                    static Instruction createIncludeInstruction(string contents) { return Instruction(Type::INCLUDE, contents, "<%i", "%>"); }
+                    static Instruction createStringInstruction(string token) { return Instruction(Type::STRING, token, "", ""); }
+                    static Instruction createCodeInstruction(string token) { return Instruction(Type::CODE, token, "<% ", "%>"); }
+                    static Instruction createPrintInstruction(string token) { return Instruction(Type::PRINT, token, "<%=", "%>"); }
+                    static Instruction createIncludeInstruction(string token) { return Instruction(Type::INCLUDE, token, "<%i", "%>"); }
+
+                    static Instruction create(string token);
             };
 
             vector<Instruction> analyze(vector<string> tokens);
