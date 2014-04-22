@@ -11,7 +11,7 @@ INCLUDE_DIRS+= /Users/avandra/projects/c++/gtest-1.7.0/include
 LIBS+= stdc++
 LIB_DIRS+= /Users/avandra/projects/c++/gtest-1.7.0/lib
 
-TESTS+= eccpc_test.cpp lexer_test.cpp
+TESTS+= tokenizer_test.cpp lexer_test.cpp
 
 SRC_DIR=src
 TEST_DIR=test
