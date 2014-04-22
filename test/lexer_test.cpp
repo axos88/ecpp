@@ -114,3 +114,13 @@ TEST(IncludeInstruction, ShouldThrowIfEndTagIsMissing) {
 
   ASSERT_THROW(Lexer::Instruction::createIncludeInstruction(s), Lexer::InvalidTokenError);
 }
+
+TEST(Analyzer, ShouldReturnAnEmptyVectorOnAnEmptyInput)
+{
+  Lexer l;
+  vector<string> input;
+
+  auto result = l.analyze(input);
+
+  ASSERT_TRUE(result.empty());
+}

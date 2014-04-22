@@ -11,4 +11,11 @@ namespace ECPP {
 
         contents = token.substr(beginTag.length(), token.length() - beginTag.length() - endTag.length());
     }
+
+    vector<Lexer::Instruction> Lexer::analyze(vector<string> tokens)
+    {
+        auto ret = vector<Lexer::Instruction>();
+
+        return ret;
+    }
 }
