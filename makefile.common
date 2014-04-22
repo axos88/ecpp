@@ -6,7 +6,7 @@ MKDIR=mkdir
 CP=cp
 
 CXXFLAGS  += -c -O$(OPTIMIZATION) --std=c++11
-CXXFLAGS += -Wall  -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)"
+CXXFLAGS += -Wall  -MMD -MP -MF"$(@:%.o=%.d)"
 
 OBJ_C   = $(patsubst %.c,%.o,$(SOURCES))
 OBJ_CXX = $(patsubst %.cpp,%.o,$(OBJ_C))
@@ -66,7 +66,7 @@ test: $(TEST_TARGET)
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@echo "CC $<"
 	@$(MKDIR) -p $(dir $@)
-	$(CC) $(INC) $(CFLAGS) -o"$@" "$<"
+	@$(CC) $(INC) $(CFLAGS) -o"$@" "$<"
 
 $(OBJ_DIR)/$(TEST_DIR)/%.o: $(TEST_DIR)/%.c
 	@echo "CC $<"
@@ -76,16 +76,16 @@ $(OBJ_DIR)/$(TEST_DIR)/%.o: $(TEST_DIR)/%.c
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	@echo "CXX $<"
 	@$(MKDIR) -p $(dir $@)
-	$(CXX) $(INC) $(CXXFLAGS) -o"$@" "$<"
+	@$(CXX) $(INC) $(CXXFLAGS) -o"$@" "$<"
 
 $(OBJ_DIR)/$(TEST_DIR)/%.o: $(TEST_DIR)/%.cpp
 	@echo "CXX $<"
 	@$(MKDIR) -p $(dir $@)
-	$(CXX) $(INC) $(CXXFLAGS) -o"$@" "$<"
+	@$(CXX) $(INC) $(CXXFLAGS) -o"$@" "$<"
 
 
 $(BIN_DIR)/%.a: $(OBJ)
-	$(MKDIR) -p $(BIN_DIR)
+	@$(MKDIR) -p $(BIN_DIR)
 	@echo "Link to library $@"
 	@$(AR) -r  $@ $(OBJ)
 
@@ -93,12 +93,12 @@ $(BIN_DIR)/%.a: $(OBJ)
 $(TARGET): $(OBJ) $(OBJ_MAIN)
 	@echo "LD $(TARGET)"
 	@$(MKDIR) -p $(BIN_DIR)
-	$(CC) $(LDFLAGS) -o"$@" $(OBJ) $(OBJ_MAIN)
+	@$(CC) $(LDFLAGS) -o"$@" $(OBJ) $(OBJ_MAIN)
 
 $(TEST_TARGET): $(OBJ) $(OBJ_TEST)
 	@echo "LD $(TEST_TARGET)"
 	@$(MKDIR) -p $(BIN_DIR)
-	$(CC) $(LDFLAGS) -o"$@" $(OBJ) $(OBJ_TEST) $(LIB_TEST)
+	@$(CC) $(LDFLAGS) -o"$@" $(OBJ) $(OBJ_TEST) $(LIB_TEST)
 
 
 
@@ -107,8 +107,8 @@ $(BIN_DIR)/%.lst: $(TARGET)
 
 clean:
 	$(RM) $(OBJ) $(DEP) $(TARGET) $(LISTING) $(MAP) $(DEP) $(OBJ_TEST) $(DEP_TEST) $(TEST_TARGET) $(OBJ_MAIN) $(DEP_MAIN)
-	find $(OBJ_DIR) -type d -empty -delete
-	find $(BIN_DIR) -type d -empty -delete
+	@find $(OBJ_DIR) -type d -empty -delete
+	@find $(BIN_DIR) -type d -empty -delete
 
 install: $(INSTALL_TARGETS) $(INSTALL_INCLUDES)
 
