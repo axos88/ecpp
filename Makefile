@@ -5,6 +5,7 @@ TYPE=app
 
 SOURCES+= tokenizer.cpp
 SOURCES+= lexer.cpp
+SOURCES+= compiler.cpp
 
 INCLUDES+=
 INCLUDE_DIRS+= /Users/avandra/projects/c++/gtest-1.7.0/include
