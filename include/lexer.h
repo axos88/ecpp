@@ -14,33 +14,26 @@ namespace ECPP {
             class Instruction
             {
                 public:
-                    enum InstructionType {
-                        STRING_INSTRUCTION,
-                        CODE_INSTRUCTION,
-                        PRINT_INSTRUCTION,
-                        INCLUDE_INSTRUCTION
+                    enum class Type {
+                        STRING,
+                        CODE,
+                        PRINT,
+                        INCLUDE
                     };
-
                 private:
-                    InstructionType type;
+                    Type type;
                     string contents;
 
                 public:
-                    Instruction(InstructionType type, string token, string beginTag = "", string endTag = "") : type(type)
-                    {
-                        if (token.find(beginTag) != 0) throw InvalidTokenError();
-                        if (token.rfind(endTag) != token.length() - endTag.length()) throw InvalidTokenError();
-
-                        contents = token.substr(beginTag.length(), token.length() - beginTag.length() - endTag.length());
-                    }
+                    Instruction(Type type, string token, string beginTag = "", string endTag = "");
 
                     string Contents() { return contents; }
-                    InstructionType Type() { return type; }
+                    Type Type() { return type; }
 
-                    static Instruction createStringInstruction(string contents) { return Instruction(Instruction::STRING_INSTRUCTION, contents, "", ""); }
-                    static Instruction createCodeInstruction(string contents) { return Instruction(Instruction::CODE_INSTRUCTION, contents, "<% ", "%>"); }
-                    static Instruction createPrintInstruction(string contents) { return Instruction(Instruction::PRINT_INSTRUCTION, contents, "<%=", "%>"); }
-                    static Instruction createIncludeInstruction(string contents) { return Instruction(Instruction::INCLUDE_INSTRUCTION, contents, "<%i", "%>"); }
+                    static Instruction createStringInstruction(string contents) { return Instruction(Type::STRING, contents, "", ""); }
+                    static Instruction createCodeInstruction(string contents) { return Instruction(Type::CODE, contents, "<% ", "%>"); }
+                    static Instruction createPrintInstruction(string contents) { return Instruction(Type::PRINT, contents, "<%=", "%>"); }
+                    static Instruction createIncludeInstruction(string contents) { return Instruction(Type::INCLUDE, contents, "<%i", "%>"); }
             };
 
             vector<Instruction> analyze(vector<string> tokens);
