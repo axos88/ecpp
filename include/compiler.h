@@ -22,7 +22,7 @@ namespace ECPP {
             string renderInclude(Lexer::Instruction &i);
             string renderPrint(Lexer::Instruction &i);
         public:
-            map<string, string> render(vector<Lexer::Instruction> &input);
+            pair<string, string> render(vector<Lexer::Instruction> &input);
     };
 
 };

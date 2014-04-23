@@ -2,25 +2,45 @@
 
 namespace ECPP {
 
+    static string strip(string input)
+    {
+        string ws = " \t\r\n";
+        string str = input;
+        size_t found;
+        found = str.find_last_not_of(ws);
+        if (found != string::npos)
+            str.erase(found+1);
+        else
+            str.clear();            // str is all whitespace
+
+        found = str.find_first_not_of(ws);
+        if (found != string::npos)
+            str.erase(0, found);
+        else
+            str.clear();            // str is all whitespace
+
+        return str;
+    }
+
     string Compiler::renderString(Lexer::Instruction &i)
     {
-        return "ret += \"" + i.Contents() + "\";";
+        return "ret += \"" + strip(i.Contents()) + "\";";
     }
     string Compiler::renderCode(Lexer::Instruction &i)
     {
-        return i.Contents();
+        return strip(i.Contents());
     }
     string Compiler::renderInclude(Lexer::Instruction &i)
     {
-        return "#include \"" + i.Contents() + "\"\r\n";
+        return "#include \"" + strip(i.Contents()) + "\"\r\n";
     }
 
     string Compiler::renderPrint(Lexer::Instruction &i)
     {
-        return "ret += " + i.Contents() + ";";
+        return "ret += " + strip(i.Contents());
     }
 
-    map<string, string> Compiler::render(vector<Lexer::Instruction> &input)
+    pair<string, string> Compiler::render(vector<Lexer::Instruction> &input)
     {
         auto ret = map<string, string>();
 
@@ -50,9 +70,6 @@ namespace ECPP {
             }
         }
 
-        ret["include"] = includes;
-        ret["code"] = code;
-
-        return ret;
+        return pair<string, string>(includes, code);
     }
 }
