@@ -120,5 +120,4 @@ TEST(Compiler, FullTest)
 
     ASSERT_EQ(expected_i, result.first);
     ASSERT_EQ(expected_c, result.second);
-
 }
