@@ -11,18 +11,6 @@ using namespace std;
 
 namespace ECPP {
 
-    #define ECPP_EXPORT(context, key, type, value) \
-        context.set(key, #type, (void*)&value)
-
-    #define ECPP_EXPORT_PTR(context, key, type, value) \
-        context.set(key, #type, (void*)value)
-
-    #define ECPP_IMPORT_PTR(context, key, type, varname) \
-        type* varname = (type*)context.get(key, #type);
-
-    #define ECPP_IMPORT(context, key, type, varname) \
-        type varname = *(type*)context.get(key, #type);
-
     class RenderContext {
 
         public:
@@ -40,7 +28,6 @@ namespace ECPP {
         private:
             map<string, Entry> entries;
 
-        public:
             void* get(string name, string type)
             {
                 auto it = entries.find(name);
@@ -56,6 +43,28 @@ namespace ECPP {
             }
             void set(string name, string type, void* value) {
                 entries[name] = Entry(type, value);
+            }
+
+
+        public:
+            template<class T>void export_by_copy(string key, T& value)
+            {
+                set(key, typeid(T).name(), new T(value));
+            };
+
+            template<class T>void export_by_move(string key, T* value)
+            {
+                set(key, typeid(T).name(), (void*)value);
+            }
+
+            template<class T>T* import_ptr(string key)
+            {
+                return (T*)get(key, typeid(T).name());
+            }
+
+            template<class T>T import(string key)
+            {
+                return *import_ptr<T>(key);
             }
     };
 
